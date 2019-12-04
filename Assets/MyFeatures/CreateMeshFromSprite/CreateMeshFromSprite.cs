@@ -7,6 +7,7 @@ public class CreateMeshFromSprite : MonoBehaviour
     public float depth = 1f;
     public Sprite sprite;
     public GameObject cube;
+    public Material mat;
 
     void Start()
     {
@@ -32,15 +33,30 @@ public class CreateMeshFromSprite : MonoBehaviour
 
                     var instance = Instantiate(cube, pos, Quaternion.identity);
                     instance.gameObject.transform.localScale = new Vector3(1,1,depth);
+                    SetUVs(instance,i,j,(int)width,(int)height);
                     var mr = instance.gameObject.GetComponent<MeshRenderer>();
-                    Color col = new Color(red, green, blue, alpha);
-                    mr.material.SetColor("_Color", col);
+                    mr.material = mat;
                     count += 1;
                 }
-
-                
             }
-            
         }
+    }
+
+    public Vector2 ConvertPixelsToUVCoordinates(int x, int y, int textureWidth, int textureHeight)
+    {
+        return new Vector2((float)x / textureWidth, (float)y / textureHeight);
+    }
+
+    public void SetUVs(GameObject cube, int x, int y, int imageWidth, int imageHeight)
+    {
+        Mesh mesh = cube.GetComponent<MeshFilter>().mesh;
+        Vector3[] vertices = mesh.vertices;
+        Vector2[] uvs = new Vector2[vertices.Length];
+
+        for (int i = 0; i < uvs.Length; i++)
+        {
+            uvs[i] = ConvertPixelsToUVCoordinates(x,y, imageWidth, imageHeight);
+        }
+        mesh.uv = uvs;
     }
 }
