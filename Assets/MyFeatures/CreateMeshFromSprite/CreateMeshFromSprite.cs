@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CreateMeshFromSprite : MonoBehaviour
 {
+    public float depth = 1f;
     public Sprite sprite;
     public GameObject cube;
 
@@ -30,6 +31,7 @@ public class CreateMeshFromSprite : MonoBehaviour
                     var pos = new Vector3(i, j, 0);
 
                     var instance = Instantiate(cube, pos, Quaternion.identity);
+                    instance.gameObject.transform.localScale = new Vector3(1,1,depth);
                     var mr = instance.gameObject.GetComponent<MeshRenderer>();
                     Color col = new Color(red, green, blue, alpha);
                     mr.material.SetColor("_Color", col);
