@@ -20,16 +20,23 @@ public class CreateMeshFromSprite : MonoBehaviour
         {
             for (int j = 0; j < height; j++)
             {
-                var pos = new Vector3(i,j,0);
-                if (sprite.texture.GetPixel(i,j).a != 0f)
-                {
+                float red = sprite.texture.GetPixel(i, j).r;
+                float green = sprite.texture.GetPixel(i, j).g;
+                float blue = sprite.texture.GetPixel(i, j).b;
+                float alpha = sprite.texture.GetPixel(i, j).a;
 
+                if (alpha > 0.2f)
+                {
+                    var pos = new Vector3(i, j, 0);
+
+                    var instance = Instantiate(cube, pos, Quaternion.identity);
+                    var mr = instance.gameObject.GetComponent<MeshRenderer>();
+                    Color col = new Color(red, green, blue, alpha);
+                    mr.material.SetColor("_Color", col);
+                    count += 1;
                 }
-                var instance = Instantiate(cube, pos, Quaternion.identity);
-                var mr = instance.gameObject.GetComponent<MeshRenderer>();
-                Color col = new Color(sprite.texture.GetPixel(i,j).r, sprite.texture.GetPixel(i, j).g, sprite.texture.GetPixel(i, j).b, sprite.texture.GetPixel(i, j).a);
-                mr.material.SetColor("_Color", col);
-                count += 1;
+
+                
             }
             
         }
