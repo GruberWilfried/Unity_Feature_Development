@@ -21,7 +21,7 @@ public class EditorCreateMeshFromSprite : EditorWindow
         source = EditorGUILayout.ObjectField(source, typeof(Texture2D), true);
         EditorGUILayout.EndHorizontal();
 
-        if (GUILayout.Button("Check"))
+        if (GUILayout.Button("Create Geometry in Scene"))
         {
             if (source != null)
             {
@@ -29,7 +29,7 @@ public class EditorCreateMeshFromSprite : EditorWindow
             }
         }
 
-        if (GUILayout.Button("Create Prefab"))
+        if (GUILayout.Button("Create Folder"))
         {
             string path = EditorUtility.SaveFilePanelInProject("","","","");
             string[] pathElements = path.Split(char.Parse("/"));
@@ -59,6 +59,9 @@ public class EditorCreateMeshFromSprite : EditorWindow
         float width = tex.width;
         float height = tex.height;
 
+        Debug.Log((int)width);
+        Debug.Log((int)height);
+
         GameObject parent = new GameObject();
         parent.name = name;
 
@@ -87,8 +90,29 @@ public class EditorCreateMeshFromSprite : EditorWindow
                     voxel.transform.SetParent(parent.transform);
 
                     voxel.GetComponent<MeshRenderer>().material = mat;
+
+                    SetUVs(voxel,x,y,(int)width,(int)height);
                 }
             }
         }
     }
+
+    public void SetUVs(GameObject cube, int x, int y, int imageWidth, int imageHeight)
+    {
+        Mesh mesh = cube.GetComponent<MeshFilter>().mesh;
+        Vector3[] vertices = mesh.vertices;
+        Vector2[] uvs = new Vector2[vertices.Length];
+
+        for (int i = 0; i < uvs.Length; i++)
+        {
+            uvs[i] = ConvertPixelsToUVCoordinates(x, y, imageWidth, imageHeight);
+        }
+        mesh.uv = uvs;
+    }
+
+    public Vector2 ConvertPixelsToUVCoordinates(int x, int y, int textureWidth, int textureHeight)
+    {
+        return new Vector2((float)x / textureWidth, (float)y / textureHeight);
+    }
+
 }
