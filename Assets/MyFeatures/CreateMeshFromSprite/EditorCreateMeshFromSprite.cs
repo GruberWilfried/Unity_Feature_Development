@@ -16,7 +16,7 @@ public class EditorCreateMeshFromSprite : EditorWindow
     private void OnGUI()
     {
         GUILayout.Label("Instructions", EditorStyles.boldLabel);
-        GUILayout.Label("1. Assign Sprite", EditorStyles.label);
+        GUILayout.Label("1. Assign Texture", EditorStyles.label);
         GUILayout.Label("2. Press Button", EditorStyles.label);
         GUILayout.Label("3. Use created Prefab from Projectwindow", EditorStyles.label);
 
@@ -114,13 +114,17 @@ public class EditorCreateMeshFromSprite : EditorWindow
 
                     GameObject voxel = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
+                    // Set the Position
                     voxel.transform.position = spawnPos;
 
+                    // Set the Parent
                     voxel.transform.SetParent(parent.transform);
 
+                    // Set the Material
                     voxel.GetComponent<MeshRenderer>().material = mat;
 
-
+                    // Adjust the Collider for better simulation
+                    voxel.GetComponent<BoxCollider>().size = new Vector3(0.8f,0.8f,0.8f);
 
                     // Create the Meshes as Asset
                     Mesh mesh = voxel.GetComponent<MeshFilter>().mesh;
